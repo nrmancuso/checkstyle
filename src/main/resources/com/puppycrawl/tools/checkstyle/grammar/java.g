@@ -822,10 +822,9 @@ implementsClause
                                         tc,
                                         s2,
                                         s5);}
-                       |    v:variableDefinitions[#mods,#t] (s6:SEMI)?
+                       |    v:variableDefinitions[#mods,#t]
                            {
                                #field = #v;
-                               #v.addChild(#s6);
                            }
                        )
                    )
@@ -897,8 +896,8 @@ variableDefinitions[AST mods, AST t]
  * It can also include possible initialization.
  */
 variableDeclarator![AST mods, AST t]
-    :    id:IDENT d:declaratorBrackets[t] v:varInitializer
-        {#variableDeclarator = #(#[VARIABLE_DEF,"VARIABLE_DEF"], mods, #(#[TYPE,"TYPE"],d), id, v);}
+    :    id:IDENT d:declaratorBrackets[t] v:varInitializer (s:SEMI)?
+        {#variableDeclarator = #(#[VARIABLE_DEF,"VARIABLE_DEF"], mods, #(#[TYPE,"TYPE"],d), id, v, s);}
     ;
 
 declaratorBrackets![AST typ]
