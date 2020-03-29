@@ -1364,7 +1364,7 @@ equalityExpression
 
 // boolean relational expressions (level 5)
 relationalExpression
-    :    shiftExpression ( "instanceof"^ typeSpec[true])?
+    :    shiftExpression ( "instanceof"^ ( (IDENT IDENT) => declaration | typeSpec[true]))?
         (    (options{warnWhenFollowAmbig=false;} :     (    LT^
                 |    GT^
                 |    LE^
