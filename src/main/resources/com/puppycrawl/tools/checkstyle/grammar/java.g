@@ -257,7 +257,6 @@ typeDefinitionInternal[AST modifiers]
     | interfaceDefinition[#modifiers]
     | enumDefinition[#modifiers]
     | annotationDefinition[#modifiers]
-    | recordDeclaration[#modifiers]
     ;
 
 // A type specification is a type name with possible brackets afterwards
@@ -547,9 +546,8 @@ annotationExpression
         {#annotationExpression = #(#[EXPR,"EXPR"],#annotationExpression);}
     ;
 
-
 recordDeclaration![AST modifiers]
-    :   r:RECORD IDENT
+    :   keyRecord IDENT
         (tp:typeParameters)?
         recordComponents
         (implementsClause)?
@@ -577,12 +575,12 @@ recordBodyDeclaration!
     ;
 
 recordConstructorDeclaration!
-    :   (AT)? modifiers (typeParameters)? IDENT
+    :   (AT)? modifiers (typeParameters)? (IDENT)+
         (LPAREN parameterDeclarationList RPAREN)? (throwsClause)?
         constructorBody
     ;
 
-
+keyRecord: {LT(1).getText().equals("record")}? IDENT ;
 
 // Definition of a Java class
 classDefinition![AST modifiers]
@@ -835,6 +833,7 @@ implementsClause
                mods:modifiers
                (td:typeDefinitionInternal[#mods]
                    {#field = #td;}
+                | rd:recordDeclaration[#mods] {#field = #rd;}
 
                // A generic method/ctor has the typeParameters before the return type.
                // This is not allowed for variable definitions, but this production
@@ -1105,8 +1104,8 @@ traditionalStatement
         // side-effects.
         |    ({LA(2) != COLON}? expression (SEMI)?)=> {LA(2) != COLON}? expression (SEMI)?
 
-        // class or record definition
-        |    m:modifiers! ( recordDeclaration[#m] |  classDefinition[#m] )
+        // class definition
+        |    m:modifiers! classDefinition[#m]
 
         // Attach a label to the front of a statement
         |    IDENT c:COLON^ {#c.setType(LABELED_STAT);} statement
@@ -1735,13 +1734,6 @@ options {
         mTreatEnumAsKeyword = aTreatAsKeyword;
     }
 
-    private boolean mTreatRecordAsKeyword = true;
-
-    public void setTreatRecordAsKeyword(boolean aTreatAsKeyword)
-    {
-        mTreatRecordAsKeyword = aTreatAsKeyword;
-    }
-
 }
 
 
@@ -2013,17 +2005,6 @@ IDENT
             }
             if (mTreatEnumAsKeyword && "enum".equals($getText)) {
                 $setType(ENUM);
-            }
-            // records must not be in literal list, else legacy usage of records
-            // i.e. "LogRecord record = log();" as a variable and method name
-            // cause false positives. The 'keyword as identifier' problem.
-            if (mTreatRecordAsKeyword
-                && "record".equals($getText)
-                && LA(2) != '=' && LA(1) != ';'
-                && LA(1) != ')' && LA(1) != '.'
-                && LA(1) != ',' && LA(1) != '('
-                && LA(2) != ':') {
-                $setType(RECORD);
             }
         }
     ;
