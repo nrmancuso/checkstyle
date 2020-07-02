@@ -258,7 +258,8 @@ public final class ScopeUtil {
             final int type = parent.getType();
             localVariableDef = type == TokenTypes.SLIST
                     || type == TokenTypes.FOR_INIT
-                    || type == TokenTypes.FOR_EACH_CLAUSE;
+                    || type == TokenTypes.FOR_EACH_CLAUSE
+                    || type == TokenTypes.PATTERN_DEF;
         }
         // catch parameter?
         if (node.getType() == TokenTypes.PARAMETER_DEF) {
