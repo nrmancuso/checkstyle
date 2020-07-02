@@ -97,6 +97,26 @@ public class LocalFinalVariableNameCheckTest
     }
 
     @Test
+    public void testLocalFinalVariableNameJava14EnhancedInstanceof()
+            throws Exception {
+        final DefaultConfiguration checkConfig =
+                createModuleConfig(LocalFinalVariableNameCheck.class);
+        checkConfig.addAttribute("format", "^[A-Z][A-Z0-9]*$");
+
+        final String pattern = "^[A-Z][A-Z0-9]*$";
+
+        final String[] expected = {
+            "7:36: " + getCheckMessage(MSG_INVALID_PATTERN, "var1", pattern),
+            "10:40: " + getCheckMessage(MSG_INVALID_PATTERN, "var2", pattern),
+        };
+
+        verify(checkConfig,
+                getNonCompilablePath(
+                        "InputLocalFinalVariableNameJava14EnhancedInstanceof.java"),
+                expected);
+    }
+
+    @Test
     public void testTryWithResources() throws Exception {
         final DefaultConfiguration checkConfig =
             createModuleConfig(LocalFinalVariableNameCheck.class);
