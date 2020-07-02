@@ -153,6 +153,8 @@ public class ScopeUtilTest {
                 "invalid result");
         assertTrue(ScopeUtil.isLocalVariableDef(getNode(TokenTypes.FOR_INIT,
                 TokenTypes.VARIABLE_DEF)), "invalid result");
+        assertTrue(ScopeUtil.isLocalVariableDef(getNode(TokenTypes.PATTERN_DEF,
+                TokenTypes.VARIABLE_DEF)), "invalid result");
         assertTrue(ScopeUtil.isLocalVariableDef(getNode(
                 TokenTypes.FOR_EACH_CLAUSE, TokenTypes.VARIABLE_DEF)), "invalid result");
         assertFalse(ScopeUtil.isLocalVariableDef(getNode(TokenTypes.CLASS_DEF,
