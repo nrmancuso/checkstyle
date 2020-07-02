@@ -154,6 +154,17 @@ public class ConstantNameCheckTest
     }
 
     @Test
+    public void testConstantNameCheckJava14EnhancedInstanceof()
+            throws Exception {
+        final DefaultConfiguration checkConfig =
+                createModuleConfig(ConstantNameCheck.class);
+        final String[] expected = CommonUtil.EMPTY_STRING_ARRAY;
+        verify(checkConfig,
+                getNonCompilablePath("InputConstantNameCheckJava14EnhancedInstanceof.java"),
+                expected);
+    }
+
+    @Test
     public void testGetAcceptableTokens() {
         final ConstantNameCheck constantNameCheckObj = new ConstantNameCheck();
         final int[] actual = constantNameCheckObj.getAcceptableTokens();

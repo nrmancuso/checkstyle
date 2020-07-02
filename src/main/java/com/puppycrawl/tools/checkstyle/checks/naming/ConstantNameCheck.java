@@ -137,8 +137,13 @@ public class ConstantNameCheck
 
         final DetailAST modifiersAST =
             ast.findFirstToken(TokenTypes.MODIFIERS);
-        final boolean isStatic = modifiersAST.findFirstToken(TokenTypes.LITERAL_STATIC) != null;
-        final boolean isFinal = modifiersAST.findFirstToken(TokenTypes.FINAL) != null;
+        boolean isStatic = false;
+        boolean isFinal = false;
+
+        if (!ScopeUtil.isInPatternDefinition(ast)) {
+            isStatic = modifiersAST.findFirstToken(TokenTypes.LITERAL_STATIC) != null;
+            isFinal = modifiersAST.findFirstToken(TokenTypes.FINAL) != null;
+        }
 
         if (isStatic && isFinal && shouldCheckInScope(modifiersAST)
                 || ScopeUtil.isInAnnotationBlock(ast)
