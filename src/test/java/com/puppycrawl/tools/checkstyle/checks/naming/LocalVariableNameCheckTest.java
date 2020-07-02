@@ -93,4 +93,24 @@ public class LocalVariableNameCheckTest
         verify(checkConfig, getPath("InputLocalVariableNameOneCharInitVarName.java"), expected);
     }
 
+    @Test
+    public void testLocalVariableNameCheckJava14EnhancedInstanceof()
+            throws Exception {
+        final DefaultConfiguration checkConfig =
+                createModuleConfig(LocalVariableNameCheck.class);
+        checkConfig.addAttribute("format", "^[a-z]{2,}[a-zA-Z0-9]*$");
+
+        final String pattern = "^[a-z]{2,}[a-zA-Z0-9]*$";
+
+        final String[] expected = {
+            "7:36: " + getCheckMessage(MSG_INVALID_PATTERN, "i", pattern),
+            "8:17: " + getCheckMessage(MSG_INVALID_PATTERN, "j", pattern),
+            "9:17: " + getCheckMessage(MSG_INVALID_PATTERN, "k", pattern),
+        };
+        verify(checkConfig,
+                getNonCompilablePath(
+                        "InputLocalVariableNameCheckJava14EnhancedInstanceof.java"),
+                expected);
+    }
+
 }
