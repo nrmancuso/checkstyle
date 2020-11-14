@@ -1,11 +1,11 @@
 //non-compiled with javac: Compilable with Java14
-package com.puppycrawl.tools.checkstyle.checks.naming.classtypeparametername;
+package org.checkstyle.suppressionxpathfilter.recordtypeparametername;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 
-record Other <foo extends Serializable & Cloneable> // warn
-(LinkedHashMap<String, Node> linkedHashMap) {
-
+record SuppressionXpathRegressionRecordTypeParameterName1
+                                    <foo extends Serializable & Cloneable> // warn
+                                    (LinkedHashMap<String, Node> linkedHashMap) {
 }
 

@@ -1,6 +1,6 @@
 //non-compiled with javac: Compilable with Java14
-package com.puppycrawl.tools.checkstyle.checks.naming.classtypeparametername;
+package org.checkstyle.suppressionxpathfilter.recordtypeparametername;
 
-public record InputRecordTypeParameterName<t>(Integer x, String str) { // warn
+public record SuppressionXpathRegressionRecordTypeParameterName2<t>(Integer x, String str) { // warn
 
 }

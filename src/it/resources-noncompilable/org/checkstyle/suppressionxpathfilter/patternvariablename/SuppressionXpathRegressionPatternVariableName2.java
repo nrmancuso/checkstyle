@@ -1,5 +1,5 @@
 //non-compiled with javac: Compilable with Java14
-package com.puppycrawl.tools.checkstyle.checks.naming;
+package org.checkstyle.suppressionxpathfilter.patternvariablename;
 
 public class SuppressionXpathRegressionPatternVariableName2 {
     MyClass(Object o1){

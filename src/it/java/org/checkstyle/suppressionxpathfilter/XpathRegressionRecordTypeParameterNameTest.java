@@ -49,15 +49,15 @@ public class XpathRegressionRecordTypeParameterNameTest extends AbstractXpathTes
         final String pattern = "^[A-Z]$";
 
         final String[] expectedViolation = {
-            "7:15: " + getCheckMessage(RecordTypeParameterNameCheck.class,
+            "8:38: " + getCheckMessage(RecordTypeParameterNameCheck.class,
                     AbstractNameCheck.MSG_INVALID_PATTERN, "foo", pattern),
         };
 
         final List<String> expectedXpathQueries = Arrays.asList(
-            "/RECORD_DEF[./IDENT[@text='Other']]/"
-                    + "TYPE_PARAMETERS/TYPE_PARAMETER[./IDENT[@text='foo']]",
-            "/RECORD_DEF[./IDENT[@text='Other']]/TYPE_PARAMETERS/"
-                    + "TYPE_PARAMETER/IDENT[@text='foo']"
+            "/RECORD_DEF[./IDENT[@text='SuppressionXpathRegressionRecordTypeParameterName1']]"
+                + "/TYPE_PARAMETERS/TYPE_PARAMETER[./IDENT[@text='foo']]",
+            "/RECORD_DEF[./IDENT[@text='SuppressionXpathRegressionRecordTypeParameterName1']]"
+                + "/TYPE_PARAMETERS/TYPE_PARAMETER/IDENT[@text='foo']"
         );
 
         runVerifications(moduleConfig, fileToProcess, expectedViolation,
@@ -75,15 +75,15 @@ public class XpathRegressionRecordTypeParameterNameTest extends AbstractXpathTes
         final String pattern = "^[A-Z]$";
 
         final String[] expectedViolation = {
-            "4:44: " + getCheckMessage(RecordTypeParameterNameCheck.class,
+            "4:66: " + getCheckMessage(RecordTypeParameterNameCheck.class,
                     AbstractNameCheck.MSG_INVALID_PATTERN, "t", pattern),
         };
 
         final List<String> expectedXpathQueries = Arrays.asList(
-            "/RECORD_DEF[./IDENT[@text='InputRecordTypeParameterName']]"
-                    + "/TYPE_PARAMETERS/TYPE_PARAMETER[./IDENT[@text='t']]",
-            "/RECORD_DEF[./IDENT[@text='InputRecordTypeParameterName']]"
-                    + "/TYPE_PARAMETERS/TYPE_PARAMETER/IDENT[@text='t']"
+            "/RECORD_DEF[./IDENT[@text='SuppressionXpathRegressionRecordTypeParameterName2']]"
+                + "/TYPE_PARAMETERS/TYPE_PARAMETER[./IDENT[@text='t']]",
+            "/RECORD_DEF[./IDENT[@text='SuppressionXpathRegressionRecordTypeParameterName2']]"
+                + "/TYPE_PARAMETERS/TYPE_PARAMETER/IDENT[@text='t']"
                 );
 
         runVerifications(moduleConfig, fileToProcess, expectedViolation,

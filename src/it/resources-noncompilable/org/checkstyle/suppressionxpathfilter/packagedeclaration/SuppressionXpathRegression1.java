@@ -2,5 +2,5 @@
 package my.packagename.mismatch.with.folder; // warn
 
 public class SuppressionXpathRegression1 {
-	// code
+    // code
 }

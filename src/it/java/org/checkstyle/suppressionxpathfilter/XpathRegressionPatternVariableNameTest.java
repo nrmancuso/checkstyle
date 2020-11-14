@@ -139,7 +139,7 @@ public class XpathRegressionPatternVariableNameTest extends AbstractXpathTestSup
         };
 
         final List<String> expectedXpathQueries = Collections.singletonList(
-                "/CLASS_DEF[./IDENT[@text='SuppressionXpathRegressionPatternVariableName1']]"
+                "/CLASS_DEF[./IDENT[@text='SuppressionXpathRegressionPatternVariableName4']]"
                     + "/OBJBLOCK/CTOR_DEF[./IDENT[@text='MyClass']]/SLIST/LITERAL_IF/EXPR/"
                     + "LITERAL_INSTANCEOF[./IDENT[@text='o1']]/"
                     + "PATTERN_VARIABLE_DEF/IDENT[@text='st']"

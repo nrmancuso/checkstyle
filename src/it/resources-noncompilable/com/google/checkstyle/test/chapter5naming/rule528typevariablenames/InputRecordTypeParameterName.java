@@ -1,5 +1,5 @@
 //non-compiled with javac: Compilable with Java14
-package com.puppycrawl.tools.checkstyle.checks.naming.recordtypeparametername;
+package com.google.checkstyle.test.chapter5naming.rule528typevariablenames;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
