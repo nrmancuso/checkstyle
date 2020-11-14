@@ -67,9 +67,8 @@
       <path>
         <fileset dir="${basedir}" includes="**/*">
           <exclude name=".git/**/*"/>
-          <exclude name="src/main/**/*"/>
-          <exclude name="src/test/java/**/*"/>
-          <exclude name="src/site/resources/images/**/*"/>
+          <exclude name="src/**/*"/>
+
           <!-- styleguides are copied/cached from origin place we should not change them  -->
           <exclude name="src/site/resources/styleguides/**/*"/>
 
@@ -116,12 +115,6 @@
           <!-- Do not validate possible source code remnants after regression testing -->
           <exclude name=".ci-temp/**/*"/>
 
-          <!-- Exclude because printed AST has line length > 100 characters -->
-          <exclude name="**/InputJava14InstanceofWithPatternMatchingAST.txt"/>
-          <exclude name="**/InputJava14Records.txt"/>
-          <exclude name="**/InputJava14TextBlocks.txt"/>
-          <exclude name="**/InputJava14SwitchExpression.txt"/>
-
         </fileset>
       </path>
       <formatter type="plain"/>
@@ -147,7 +140,8 @@
                 >
       <path>
         <fileset dir="src"
-            includes="it/resources/**/*,test/resources/**/*,test/resources-noncompilable/**/*">
+                 includes="it/resources/**/*,test/resources/**/*,
+                 test/resources-noncompilable/**/*, it/resources-noncompilable/**/*">
           <!-- bad syntax, permanent exclude -->
           <exclude name="**/InputAstTreeStringPrinter.java" />
           <exclude name="**/InputSuppressionsStringPrinter.java"/>
@@ -156,6 +150,12 @@
           <exclude name="**/InputMainFrameModelIncorrectClass.java"/>
           <exclude name="**/InputBeforeExecutionExclusionFileFilterIncorrectClass.java"/>
           <exclude name="**/InputJavaParser.java"/>
+
+          <!-- Exclude because printed AST has line length > 100 characters -->
+          <exclude name="**/InputJava14InstanceofWithPatternMatchingAST.txt"/>
+          <exclude name="**/InputJava14Records.txt"/>
+          <exclude name="**/InputJava14TextBlocks.txt"/>
+          <exclude name="**/InputJava14SwitchExpression.txt"/>
 
         </fileset>
       </path>
