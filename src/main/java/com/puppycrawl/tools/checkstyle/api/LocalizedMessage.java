@@ -423,11 +423,11 @@ public final class LocalizedMessage
 
         if (lineNo == other.lineNo) {
             if (columnNo == other.columnNo) {
-                if (Objects.equals(moduleId, other.moduleId)) {
+                if (moduleId != null && Objects.equals(moduleId, other.moduleId)) {
                     result = getMessage().compareTo(other.getMessage());
                 }
                 else if (moduleId == null) {
-                    result = -1;
+                    result = getSourceName().compareTo(other.getSourceName());
                 }
                 else if (other.moduleId == null) {
                     result = 1;
