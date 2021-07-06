@@ -23,9 +23,9 @@ import static com.puppycrawl.tools.checkstyle.checks.whitespace.NoWhitespaceAfte
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.antlr.v4.runtime.CommonToken;
 import org.junit.jupiter.api.Test;
 
-import antlr.CommonHiddenStreamToken;
 import com.puppycrawl.tools.checkstyle.AbstractModuleTestSupport;
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 import com.puppycrawl.tools.checkstyle.DetailAstImpl;
@@ -369,12 +369,8 @@ public class NoWhitespaceAfterCheckTest
      */
     private static DetailAstImpl mockAST(final int tokenType, final String tokenText,
             final String tokenFileName) {
-        final CommonHiddenStreamToken tokenImportSemi = new CommonHiddenStreamToken();
-        tokenImportSemi.setType(tokenType);
-        tokenImportSemi.setText(tokenText);
-        tokenImportSemi.setFilename(tokenFileName);
         final DetailAstImpl astSemi = new DetailAstImpl();
-        astSemi.initialize(tokenImportSemi);
+        astSemi.initialize(new CommonToken(tokenType, tokenText));
         return astSemi;
     }
 

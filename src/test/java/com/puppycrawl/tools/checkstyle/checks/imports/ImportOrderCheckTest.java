@@ -26,9 +26,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.antlr.v4.runtime.CommonToken;
 import org.junit.jupiter.api.Test;
 
-import antlr.CommonHiddenStreamToken;
 import com.puppycrawl.tools.checkstyle.AbstractModuleTestSupport;
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 import com.puppycrawl.tools.checkstyle.DetailAstImpl;
@@ -721,12 +721,9 @@ public class ImportOrderCheckTest extends AbstractModuleTestSupport {
      */
     private static DetailAstImpl mockAST(final int tokenType, final String tokenText,
             final String tokenFileName, final int tokenRow, final int tokenColumn) {
-        final CommonHiddenStreamToken tokenImportSemi = new CommonHiddenStreamToken();
-        tokenImportSemi.setType(tokenType);
-        tokenImportSemi.setText(tokenText);
+        final CommonToken tokenImportSemi = new CommonToken(tokenType, tokenText);
         tokenImportSemi.setLine(tokenRow);
-        tokenImportSemi.setColumn(tokenColumn);
-        tokenImportSemi.setFilename(tokenFileName);
+        tokenImportSemi.setCharPositionInLine(tokenColumn);
         final DetailAstImpl astSemi = new DetailAstImpl();
         astSemi.initialize(tokenImportSemi);
         return astSemi;

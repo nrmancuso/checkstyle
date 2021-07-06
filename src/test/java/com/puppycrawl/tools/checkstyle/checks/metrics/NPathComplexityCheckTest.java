@@ -30,9 +30,9 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.SortedSet;
 
+import org.antlr.v4.runtime.CommonToken;
 import org.junit.jupiter.api.Test;
 
-import antlr.CommonHiddenStreamToken;
 import com.puppycrawl.tools.checkstyle.AbstractModuleTestSupport;
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 import com.puppycrawl.tools.checkstyle.DetailAstImpl;
@@ -300,7 +300,7 @@ public class NPathComplexityCheckTest extends AbstractModuleTestSupport {
     public void testDefaultHooks() {
         final NPathComplexityCheck npathComplexityCheckObj = new NPathComplexityCheck();
         final DetailAstImpl ast = new DetailAstImpl();
-        ast.initialize(new CommonHiddenStreamToken(TokenTypes.INTERFACE_DEF, "interface"));
+        ast.initialize(new CommonToken(TokenTypes.INTERFACE_DEF, "interface"));
 
         npathComplexityCheckObj.visitToken(ast);
         final SortedSet<Violation> violations1 = npathComplexityCheckObj.getViolations();
@@ -383,12 +383,9 @@ public class NPathComplexityCheckTest extends AbstractModuleTestSupport {
      */
     private static DetailAstImpl mockAST(final int tokenType, final String tokenText,
             final String tokenFileName, final int tokenRow, final int tokenColumn) {
-        final CommonHiddenStreamToken tokenImportSemi = new CommonHiddenStreamToken();
-        tokenImportSemi.setType(tokenType);
-        tokenImportSemi.setText(tokenText);
+        final CommonToken tokenImportSemi = new CommonToken(tokenType, tokenText);
         tokenImportSemi.setLine(tokenRow);
-        tokenImportSemi.setColumn(tokenColumn);
-        tokenImportSemi.setFilename(tokenFileName);
+        tokenImportSemi.setCharPositionInLine(tokenColumn);
         final DetailAstImpl astSemi = new DetailAstImpl();
         astSemi.initialize(tokenImportSemi);
         return astSemi;
