@@ -586,3 +586,6 @@
   <property name="fileNamePattern" value="/MultiCatch\.java$"/>
 </module>
 
+<module name="BeforeExecutionExclusionFileFilter">
+  <property name="fileNamePattern" value="/\.java$"/>
+</module>
