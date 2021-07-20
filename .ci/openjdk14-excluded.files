@@ -556,3 +556,6 @@
 <module name="BeforeExecutionExclusionFileFilter">
   <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk14[\\/]test[\\/]langtools[\\/]tools[\\/]javac[\\/]QualifiedAccess[\\/]QualifiedAccess_4.java$"/>
 </module>
+<module name="BeforeExecutionExclusionFileFilter">
+  <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk14[\\/]test[\\/]langtools[\\/]tools[\\/]javac[\\/]failover[\\/]FailOver01.java$"/>
+</module>
