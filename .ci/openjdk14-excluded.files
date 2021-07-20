@@ -505,3 +505,6 @@
 <module name="BeforeExecutionExclusionFileFilter">
   <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk14[\\/]test[\\/]langtools[\\/]tools[\\/]javac[\\/]lambda[\\/]8016320[\\/]IllegalBridgeModifier.java$"/>
 </module>
+<module name="BeforeExecutionExclusionFileFilter">
+  <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk14[\\/]test[\\/]langtools[\\/]tools[\\/]javac[\\/]lambda[\\/]methodReferenceExecution[\\/]MethodReferenceTestSuperDefault.java$"/>
+</module>
