@@ -583,3 +583,6 @@
 <module name="BeforeExecutionExclusionFileFilter">
   <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk14[\\/]test[\\/]langtools[\\/]tools[\\/]javac[\\/]switchexpr[\\/]ExpressionSwitchBreaks1.java$"/>
 </module>
+<module name="BeforeExecutionExclusionFileFilter">
+  <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk14[\\/]test[\\/]langtools[\\/]tools[\\/]javac[\\/]parser[\\/]8081769[\\/]T8081769.java$"/>
+</module>
