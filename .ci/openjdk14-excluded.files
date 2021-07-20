@@ -511,3 +511,6 @@
 <module name="BeforeExecutionExclusionFileFilter">
   <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk14[\\/]test[\\/]langtools[\\/]tools[\\/]javac[\\/]lambda[\\/]methodReferenceExecution[\\/]MethodReferenceTestVarArgsSuperDefault.java$"/>
 </module>
+<module name="BeforeExecutionExclusionFileFilter">
+  <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk14[\\/]test[\\/]langtools[\\/]tools[\\/]javac[\\/]T8059921[\\/]ForbidAccessToFieldUsingSuperTest.java$"/>
+</module>
