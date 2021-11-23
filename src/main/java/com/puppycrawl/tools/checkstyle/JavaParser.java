@@ -104,7 +104,10 @@ public final class JavaParser {
             throw new CheckstyleException(exceptionMsg, ex);
         }
 
-        return new JavaAstVisitor(tokenStream).visit(compilationUnit);
+        final DetailAST returnAst = new JavaAstVisitor(tokenStream).visit(compilationUnit);
+        parser.reset();
+        lexer.reset();
+        return returnAst;
     }
 
     /**
