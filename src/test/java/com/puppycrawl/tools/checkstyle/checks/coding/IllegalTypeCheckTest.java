@@ -341,6 +341,55 @@ public class IllegalTypeCheckTest extends AbstractModuleTestSupport {
     }
 
     @Test
+    public void testRecordComponentsDefault() throws Exception {
+
+        final String[] expected = {
+            "45:9: " + getCheckMessage(MSG_KEY, "TreeMap"),
+            "53:23: " + getCheckMessage(MSG_KEY, "TreeMap"),
+        };
+
+        verifyWithInlineConfigParser(
+                getNonCompilablePath("InputIllegalTypeTestInnerRecordsDefault.java"),
+            expected);
+    }
+
+    @Test
+    public void testRecordComponentsFinal() throws Exception {
+
+        final String[] expected = {
+            "45:9: " + getCheckMessage(MSG_KEY, "TreeMap"),
+            "53:23: " + getCheckMessage(MSG_KEY, "TreeMap"),
+        };
+
+        verifyWithInlineConfigParser(
+                getNonCompilablePath("InputIllegalTypeTestInnerRecordsFinal.java"),
+            expected);
+    }
+
+    @Test
+    public void testRecordComponentsPrivateFinal() throws Exception {
+
+        final String[] expected = {
+            "45:9: " + getCheckMessage(MSG_KEY, "TreeMap"),
+            "53:23: " + getCheckMessage(MSG_KEY, "TreeMap"),
+        };
+
+        verifyWithInlineConfigParser(
+                getNonCompilablePath("InputIllegalTypeTestInnerRecordsPrivateFinal.java"),
+            expected);
+    }
+
+    @Test
+    public void testRecordComponentsPublicProtectedStatic() throws Exception {
+
+        final String[] expected = CommonUtil.EMPTY_STRING_ARRAY;
+
+        verifyWithInlineConfigParser(
+                getNonCompilablePath("InputIllegalTypeTestInnerRecordsPublicProtectedStatic.java"),
+            expected);
+    }
+
+    @Test
     public void testTokensNotNull() {
         final IllegalTypeCheck check = new IllegalTypeCheck();
         assertNotNull(check.getAcceptableTokens(), "Acceptable tokens should not be null");

@@ -473,8 +473,10 @@ public final class IllegalTypeCheck extends AbstractCheck {
             case TokenTypes.VARIABLE_DEF:
             case TokenTypes.ANNOTATION_FIELD_DEF:
             case TokenTypes.PATTERN_VARIABLE_DEF:
-            case TokenTypes.RECORD_COMPONENT_DEF:
                 visitVariableDef(ast);
+                break;
+            case TokenTypes.RECORD_COMPONENT_DEF:
+                visitRecordComponentDef(ast);
                 break;
             case TokenTypes.PARAMETER_DEF:
                 visitParameterDef(ast);
@@ -576,6 +578,21 @@ public final class IllegalTypeCheck extends AbstractCheck {
     private void visitVariableDef(DetailAST variableDef) {
         if (isVerifiable(variableDef)) {
             checkClassName(variableDef);
+        }
+    }
+
+    /**
+     * Checks a record component definition. Record components are private
+     * final fields, so we treat code in a similar manner as we do for
+     * private final class members.
+     *
+     * @param recordComponentDef the record component defintion to check.
+     */
+    private void visitRecordComponentDef(DetailAST recordComponentDef) {
+        if (memberModifiers.isEmpty()
+                || memberModifiers.contains(TokenTypes.LITERAL_PRIVATE)
+                || memberModifiers.contains(TokenTypes.FINAL)) {
+            checkClassName(recordComponentDef);
         }
     }
 
