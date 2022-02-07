@@ -17,7 +17,6 @@ or set of validation rules (best practices).
 
 [![][codeship img]][codeship]
 [![][dependabot img]][dependabot]
-
 [![][mavenbadge img]][mavenbadge]
 [![][sonar img]][sonar]
 
