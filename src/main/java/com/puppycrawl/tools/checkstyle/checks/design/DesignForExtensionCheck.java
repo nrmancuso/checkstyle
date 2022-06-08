@@ -356,6 +356,7 @@ public class DesignForExtensionCheck extends AbstractCheck {
             final DetailAST classDef = getNearestClassOrEnumDefinition(ast);
             if (canBeSubclassed(classDef)) {
                 final String className = classDef.findFirstToken(TokenTypes.IDENT).getText();
+                assert className != null;
                 final String methodName = ast.findFirstToken(TokenTypes.IDENT).getText();
                 log(ast, MSG_KEY, className, methodName);
             }
