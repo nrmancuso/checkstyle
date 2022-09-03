@@ -19,39 +19,24 @@
 
 package com.puppycrawl.tools.checkstyle.internal;
 
-import static com.tngtech.archunit.base.DescribedPredicate.not;
-import static com.tngtech.archunit.lang.conditions.ArchPredicates.are;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.methods;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
-import java.util.Set;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.tngtech.archunit.base.DescribedPredicate;
-import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
+import com.tngtech.archunit.lang.EvaluationResult;
+import com.tngtech.archunit.lang.FailureReport;
 
 public class ArchUnitTest {
-
-    /**
-     * List of classes that don't follow the rule
-     * {@code testClassesInApiDoNotDependOnClassesInUtil}.
-     */
-    private static final Set<String> API_CLASSES_DEPENDENT_ON_UTILS = Set.of(
-        "com.puppycrawl.tools.checkstyle.api.FileText",
-        "com.puppycrawl.tools.checkstyle.api.AbstractCheck",
-        "com.puppycrawl.tools.checkstyle.api.AbstractFileSetCheck",
-        "com.puppycrawl.tools.checkstyle.api.AutomaticBean$PatternConverter",
-        "com.puppycrawl.tools.checkstyle.api.AutomaticBean$RelaxedStringArrayConverter",
-        "com.puppycrawl.tools.checkstyle.api.AutomaticBean$UriConverter",
-        "com.puppycrawl.tools.checkstyle.api.FileContents"
-    );
 
     @BeforeAll
     public static void init() {
@@ -96,34 +81,76 @@ public class ArchUnitTest {
         checkMethodsShouldNotBeProtectedRule.check(importedClasses);
     }
 
+    private static final List<String> API_PACKAGE_SUPPRESSION_DETAILS = List.of(
+            "Constructor <com.puppycrawl.tools.checkstyle.api.FileText.<init>(java.io.File, " +
+                    "java.lang.String)> gets field <com.puppycrawl.tools.checkstyle.utils.CommonUtil." +
+                    "EMPTY_STRING_ARRAY> in",
+            "Constructor <com.puppycrawl.tools.checkstyle.api.FileText.<init>(java.io.File, java.util.List)> " +
+                    "gets field <com.puppycrawl.tools.checkstyle.utils.CommonUtil.EMPTY_STRING_ARRAY>" +
+                    " in ",
+            "Method <com.puppycrawl.tools.checkstyle.api.AbstractCheck.log(com.puppycrawl.tools.checkstyle.api." +
+                    "DetailAST, java.lang.String, [Ljava.lang.Object;)> calls method" +
+                    " <com.puppycrawl.tools.checkstyle.utils.CommonUtil.lengthExpandedTabs" +
+                    "(java.lang.String, int, int)>",
+            "Method <com.puppycrawl.tools.checkstyle.api.AbstractCheck.log(int, int, java.lang.String, " +
+                    "[Ljava.lang.Object;)> calls method <com.puppycrawl.tools.checkstyle.utils." +
+                    "CommonUtil.lengthExpandedTabs(java.lang.String, int, int)>",
+            "Method <com.puppycrawl.tools.checkstyle.api.AbstractFileSetCheck.log(int, int, java.lang.String, " +
+                    "[Ljava.lang.Object;)> calls method <com.puppycrawl.tools.checkstyle.utils.CommonUtil." +
+                    "lengthExpandedTabs(java.lang.String, int, int)>",
+            "Method <com.puppycrawl.tools.checkstyle.api.AbstractFileSetCheck.process(java.io.File, " +
+                    "com.puppycrawl.tools.checkstyle.api.FileText)> calls method <com.puppycrawl.tools." +
+                    "checkstyle.utils.CommonUtil.matchesFileExtension(java.io.File, [Ljava.lang.String;)> ",
+            "Method <com.puppycrawl.tools.checkstyle.api.AbstractFileSetCheck.setFileExtensions([Ljava." +
+                    "lang.String;)> calls method <com.puppycrawl.tools.checkstyle.utils.CommonUtil." +
+                    "startsWithChar(java.lang.String, char)> in",
+            "Method <com.puppycrawl.tools.checkstyle.api.AutomaticBean$PatternConverter.convert(java." +
+                    "lang.Class, java.lang.Object)> calls method <com.puppycrawl.tools.checkstyle.utils." +
+                    "CommonUtil.createPattern(java.lang.String)> in",
+            "Method <com.puppycrawl.tools.checkstyle.api.AutomaticBean$RelaxedStringArrayConverter." +
+                    "convert(java.lang.Class, java.lang.Object)> gets field <com.puppycrawl.tools." +
+                    "checkstyle.utils.CommonUtil.EMPTY_STRING_ARRAY> in",
+            "Method <com.puppycrawl.tools.checkstyle.api.AutomaticBean$UriConverter.convert(java." +
+                    "lang.Class, java.lang.Object)> calls method <com.puppycrawl.tools.checkstyle" +
+                    ".utils.CommonUtil.getUriByFilename(java.lang.String)> in",
+            "Method <com.puppycrawl.tools.checkstyle.api.AutomaticBean$UriConverter.convert(java.lang." +
+                    "Class, java.lang.Object)> calls method <com.puppycrawl.tools.checkstyle.utils.C" +
+                    "ommonUtil.isBlank(java.lang.String)> in",
+            "Method <com.puppycrawl.tools.checkstyle.api.FileContents.lineIsBlank(int)> calls method" +
+                    " <com.puppycrawl.tools.checkstyle.utils.CommonUtil.isBlank(java.lang.String)> " +
+                    "in"
+    );
+
     /**
      * The goal is to ensure all classes in api package are not dependent on classes in util
      * pacakages.
      *
-     * @noinspection JUnitTestMethodWithNoAssertions
-     * @noinspectionreason JUnitTestMethodWithNoAssertions - asserts in callstack,
-     *     but not in this method
      */
     @Test
     public void testClassesInApiDoNotDependOnClassesInUtil() {
-        final JavaClasses importedClasses = new ClassFileImporter()
+        final JavaClasses apiPackage = new ClassFileImporter()
             .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
             .importPackages("com.puppycrawl.tools.checkstyle.api");
 
-        final DescribedPredicate<JavaClass> suppressed = new DescribedPredicate<>("suppressed") {
-            @Override
-            public boolean apply(JavaClass input) {
-                return API_CLASSES_DEPENDENT_ON_UTILS.contains(input.getFullName());
-            }
+        final String [] utilPackages =  {
+                "com.puppycrawl.tools.checkstyle.utils",
+                "com.puppycrawl.tools.checkstyle.checks.javadoc.utils"
         };
 
-        final ArchRule testClassesInApiDoNotDependOnClassesInUtil = noClasses()
-            .that(are(not(suppressed)))
+        final ArchRule classShouldNotDependOnUtilPackages = noClasses()
             .should()
             .dependOnClassesThat()
-            .resideInAnyPackage("com.puppycrawl.tools.checkstyle.utils",
-                                "com.puppycrawl.tools.checkstyle.checks.javadoc.utils");
+            .resideInAnyPackage(utilPackages);
 
-        testClassesInApiDoNotDependOnClassesInUtil.check(importedClasses);
+        final EvaluationResult result = classShouldNotDependOnUtilPackages.evaluate(apiPackage);
+        final EvaluationResult filtered = result.filterDescriptionsMatching(description -> {
+            return API_PACKAGE_SUPPRESSION_DETAILS.stream()
+                    .noneMatch(description::contains);
+        });
+
+        assertWithMessage("api package: " + classShouldNotDependOnUtilPackages.getDescription())
+                .that(filtered.getFailureReport().getDetails())
+                .isEmpty();
     }
+
 }
