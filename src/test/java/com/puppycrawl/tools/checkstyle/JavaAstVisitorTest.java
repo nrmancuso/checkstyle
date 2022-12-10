@@ -88,7 +88,13 @@ public class JavaAstVisitorTest extends AbstractModuleTestSupport {
             "visitClassType",
             "visitClassOrInterfaceTypeExtended",
             "visitQualifiedNameExtended",
-            "visitGuard"
+            "visitGuard",
+
+            // until https://github.com/checkstyle/checkstyle/issues/12507
+            "visitRecordComponentPatternList",
+            "visitRecordPatternDef",
+            "visitRecordPattern",
+            "visitRecordStructurePattern"
     );
 
     @Override
