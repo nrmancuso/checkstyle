@@ -380,18 +380,7 @@ public class IllegalImportCheck
 
     @Override
     public void visitToken(DetailAST ast) {
-        final FullIdent imp;
-        if (ast.getType() == TokenTypes.IMPORT) {
-            imp = FullIdent.createFullIdentBelow(ast);
-        }
-        else {
-            imp = FullIdent.createFullIdent(
-                ast.getFirstChild().getNextSibling());
-        }
-        final String importText = imp.getText();
-        if (isIllegalImport(importText)) {
-            log(ast, MSG_KEY, importText);
-        }
+        throw new IllegalStateException("visitToken is not supported");
     }
 
     /**
