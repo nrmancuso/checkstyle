@@ -15,6 +15,7 @@ download-files)
   LINK="${LINK_FROM_PR:-$DEFAULT_PROJECTS_LINK}"
 
   # get projects file
+  echo "LINK: $LINK"
   curl --fail-with-body -X GET "${LINK}" \
     -H "Accept: application/vnd.github+json" \
     -H "Authorization: token $GITHUB_TOKEN" \

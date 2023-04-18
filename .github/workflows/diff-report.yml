@@ -138,6 +138,7 @@ jobs:
         run: |
           cd checkstyle
           echo "This is a test"
+          echo ""
           ./.ci/diff-report.sh download-files
           cd ../
 
