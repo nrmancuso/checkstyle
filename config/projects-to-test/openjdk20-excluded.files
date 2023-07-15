@@ -55,3 +55,6 @@
 <module name="BeforeExecutionExclusionFileFilter">
   <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk20[\\/]test[\\/]langtools[\\/]tools[\\/]javac[\\/]lambda[\\/]funcInterfaces[\\/]LambdaTest1_neg1.java$"/>
 </module>
+<module name="BeforeExecutionExclusionFileFilter">
+  <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk20[\\/]test[\\/]langtools[\\/]tools[\\/]javac[\\/]processing[\\/]6994946[\\/]SyntaxErrorTest.java$"/>
+</module>
