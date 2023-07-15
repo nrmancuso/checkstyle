@@ -82,3 +82,6 @@
 <module name="BeforeExecutionExclusionFileFilter">
   <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk20[\\/]test[\\/]langtools[\\/]tools[\\/]javac[\\/]unicode[\\/]SupplementaryJavaID5.java$"/>
 </module>
+<module name="BeforeExecutionExclusionFileFilter">
+  <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk20[\\/]test[\\/]langtools[\\/]tools[\\/]javac[\\/]unicode[\\/]NonasciiDigit.java$"/>
+</module>
