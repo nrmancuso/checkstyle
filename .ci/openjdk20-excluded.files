@@ -10,3 +10,6 @@
 <module name="BeforeExecutionExclusionFileFilter">
   <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk20[\\/]test[\\/]langtools[\\/]jdk[\\/]javadoc[\\/]tool[\\/]T4994049[\\/]FileWithTabs.java$"/>
 </module>
+<module name="BeforeExecutionExclusionFileFilter">
+  <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk20[\\/]test[\\/]langtools[\\/]jdk[\\/]javadoc[\\/]tool[\\/]T4994049[\\/]FileWithTabs.java$"/>
+</module>
