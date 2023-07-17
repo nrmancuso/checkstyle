@@ -517,3 +517,6 @@
 <module name="BeforeExecutionExclusionFileFilter">
   <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk20[\\/]test[\\/]hotspot[\\/]jtreg[\\/]runtime[\\/]classFileParserBug[\\/]Bad_NCDFE_Msg.java$"/>
 </module>
+<module name="BeforeExecutionExclusionFileFilter">
+  <property name="fileNamePattern" value="[\\/]home[\\/]nick[\\/]development[\\/]checkstyle[\\/].ci-temp[\\/]contribution[\\/]checkstyle-tester[\\/]src[\\/]main[\\/]java[\\/]openjdk20[\\/]test[\\/]hotspot[\\/]jtreg[\\/]runtime[\\/]exceptionMsgs[\\/]methodPrinting[\\/]TestPrintingMethods.java$"/>
+</module>
