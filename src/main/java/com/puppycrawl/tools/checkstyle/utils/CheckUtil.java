@@ -301,7 +301,7 @@ public final class CheckUtil {
             final DetailAST params = ast.findFirstToken(TokenTypes.PARAMETERS);
             final boolean singleParam = params.getChildCount(TokenTypes.PARAMETER_DEF) == 1;
 
-            if (matchesSetterFormat && singleParam) {
+            if (matchesSetterFormat) {
                 // Now verify that the body consists of:
                 // SLIST -> EXPR -> ASSIGN
                 // SEMI
