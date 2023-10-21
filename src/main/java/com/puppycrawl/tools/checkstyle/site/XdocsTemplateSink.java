@@ -19,6 +19,7 @@
 
 package com.puppycrawl.tools.checkstyle.site;
 
+import java.io.PrintWriter;
 import java.io.Writer;
 
 import javax.swing.text.MutableAttributeSet;
@@ -27,6 +28,8 @@ import org.apache.maven.doxia.markup.HtmlMarkup;
 import org.apache.maven.doxia.module.xdoc.XdocSink;
 import org.apache.maven.doxia.sink.SinkEventAttributes;
 import org.apache.maven.doxia.sink.impl.SinkEventAttributeSet;
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCall;
 
 /**
  * A sink for Checkstyle's xdoc templates.
@@ -47,7 +50,7 @@ public class XdocsTemplateSink extends XdocSink {
      * @param encoding encoding of the writer.
      */
     public XdocsTemplateSink(Writer writer, String encoding) {
-        super(writer);
+        super(new @GuardSatisfied CustomPrintWriter(writer));
         this.encoding = encoding;
     }
 
@@ -104,5 +107,29 @@ public class XdocsTemplateSink extends XdocSink {
     @Override
     public void tableRows(int[] justification, boolean grid) {
         writeStartTag(HtmlMarkup.TABLE);
+    }
+
+    /**
+     * A Custom writer that only prints Unix-style newline character.
+     */
+    @MustCall
+    private static final class CustomPrintWriter extends PrintWriter {
+
+        /**
+         * Creates a new instance of this custom writer.
+         *
+         * @param writer not null writer to write the result
+         */
+        private CustomPrintWriter(Writer writer) {
+            super(writer);
+        }
+
+        /**
+         * Enforces Unix-Style Newline character.
+         */
+        @Override
+        public void println() {
+            write("\n");
+        }
     }
 }
