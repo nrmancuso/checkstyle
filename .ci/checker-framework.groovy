@@ -14,6 +14,12 @@ import java.util.regex.Pattern
 
 int exitCode = 1
 if (args.length == 1) {
+    try {
+        exitCode = parseArgumentAndExecute(args[0])
+    }
+    catch (Exception e) {
+        println "Exception: " + e.getMessage()
+    }
     exitCode = parseArgumentAndExecute(args[0])
 }
 else {
