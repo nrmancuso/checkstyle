@@ -101,6 +101,16 @@ public final class TokenUtil {
             );
     }
 
+    public static <T> T cast(Object obj, Class<T> cls) {
+       if (cls.isInstance(obj)) {
+           return cls.cast(obj);
+       }
+       else {
+          throw new IllegalArgumentException(
+            String.format(Locale.ROOT, "Cannot cast %s to %s", obj, cls));
+       }
+    }
+
     /**
      * Inverts a given map by exchanging each entry's key and value.
      *
