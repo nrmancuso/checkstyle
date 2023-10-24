@@ -4836,6 +4836,7 @@
               <excludedMethods>
                 <!-- unkilled in generated code https://github.com/hcoles/pitest/issues/255 -->
                 <param>isFileExists</param>
+                <param>cast</param>
               </excludedMethods>
               <excludedClasses>
                 <class>com.puppycrawl.tools.checkstyle.utils.UnmodifiableCollectionUtil</class>

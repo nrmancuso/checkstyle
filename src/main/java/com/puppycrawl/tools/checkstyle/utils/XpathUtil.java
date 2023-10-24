@@ -215,7 +215,7 @@ public final class XpathUtil {
                 .createDynamicContext(rootNode);
         final List<Item> items = xpathExpression.evaluate(xpathDynamicContext);
         return items.stream()
-                .map(NodeInfo.class::cast)
+                .map(i -> TokenUtil.cast(i, NodeInfo.class))
                 .collect(Collectors.toUnmodifiableList());
     }
 }
