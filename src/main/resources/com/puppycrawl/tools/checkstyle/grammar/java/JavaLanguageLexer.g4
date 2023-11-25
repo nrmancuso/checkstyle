@@ -113,7 +113,8 @@ tokens {
     RECORD_PATTERN_DEF, RECORD_PATTERN_COMPONENTS,
 
     STRING_TEMPLATE_BEGIN, STRING_TEMPLATE_MID, STRING_TEMPLATE_END,
-    EMBEDDED_EXPRESSION
+    EMBEDDED_EXPRESSION_BEGIN, EMBEDDED_EXPRESSION_END, EMBEDDED_EXPRESSION,
+    STRING_TEMPLATE_CONTENT
 }
 
 @header {
@@ -154,6 +155,10 @@ import com.puppycrawl.tools.checkstyle.grammar.CrAwareLexerSimulator;
 
     private boolean isTextBlockMode() {
         return _modeStack.size() > 0 && _modeStack.peek() == TextBlock;
+    }
+
+    private boolean isStringTemplateMode() {
+        return _modeStack.size() > 0 && _modeStack.peek() == StringTemplate;
     }
 }
 
@@ -252,9 +257,13 @@ CHAR_LITERAL:            '\'' (EscapeSequence | ~['\\\r\n]) '\'';
 fragment StringFragment: (EscapeSequence | ~["\\\r\n])*;
 
 STRING_LITERAL:          '"' StringFragment '"';
-STRING_TEMPLATE_BEGIN:   '"'  StringFragment '\\' '{';
-STRING_TEMPLATE_MID:     '}' StringFragment '\\' '{';
-STRING_TEMPLATE_END:     '}' StringFragment '"';
+
+// replace the following with the tokens from the
+// original branch, but have each have their own mode
+// to produce the tokens we need since that grammar
+// actually worked.
+STRING_TEMPLATE_BEGIN:   '"' -> pushMode(StringTemplate);
+STRING_TEMPLATE_MID:     '}' -> pushMode(StringTemplate);
 
 TEXT_BLOCK_LITERAL_BEGIN: '"' '"' '"' -> pushMode(TextBlock);
 
@@ -265,7 +274,9 @@ LITERAL_NULL:            'null';
 LPAREN:                  '(';
 RPAREN:                  ')';
 LCURLY:                  '{';
-RCURLY:                  '}';
+// is rcurly, but also can be EMBEDDED_EXPRESSION_END if we
+// are in string template mode
+RCURLY:                  '}' { if (isStringTemplateMode()) popMode(); };
 LBRACK:                  '[';
 RBRACK:                  ']';
 SEMI:                    ';';
@@ -411,6 +422,17 @@ fragment Letter
     // covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
     | [\uD800-\uDBFF] [\uDC00-\uDFFF]
     ;
+
+mode StringTemplate;
+    STRING_TEMPLATE_CONTENT
+        : StringFragment -> type(STRING_TEMPLATE_CONTENT)
+        ;
+
+    EMBEDDED_EXPRESSION_BEGIN
+        : '\\' '{' -> popMode, type(EMBEDDED_EXPRESSION_BEGIN);
+
+    STRING_TEMPLATE_END
+        : '"' -> popMode, type(STRING_TEMPLATE_END);
 
 // Text block lexical mode
 mode TextBlock;
