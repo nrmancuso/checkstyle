@@ -1764,28 +1764,29 @@ public final class JavaAstVisitor extends JavaLanguageParserBaseVisitor<DetailAs
 
     @Override
     public DetailAstImpl visitStringTemplate(JavaLanguageParser.StringTemplateContext ctx) {
-        final DetailAstImpl stringTemplate = create(ctx.STRING_TEMPLATE_BEGIN());
-        if (ctx.expr() != null) {
-            final DetailAstImpl embeddedExpression =
-                    createImaginary(TokenTypes.EMBEDDED_EXPRESSION);
-            embeddedExpression.addChild(visit(ctx.expr()));
-            stringTemplate.addChild(embeddedExpression);
-        }
-
-        if (ctx.stringTemplateMiddle() != null) {
-            ctx.stringTemplateMiddle().forEach(child -> {
-                final DetailAstImpl stringTemplateMiddle =
-                        create(child.STRING_TEMPLATE_MID());
-                final DetailAstImpl embeddedExpression =
-                        createImaginary(TokenTypes.EMBEDDED_EXPRESSION);
-                embeddedExpression.addChild(visit(child.expr()));
-                stringTemplate.addChild(stringTemplateMiddle);
-                stringTemplate.addChild(embeddedExpression);
-            });
-        }
-
-        stringTemplate.addChild(create(ctx.STRING_TEMPLATE_END()));
-        return stringTemplate;
+        return createImaginary(TokenTypes.EMBEDDED_EXPRESSION);
+//        final DetailAstImpl stringTemplate = create(ctx.STRING_TEMPLATE_BEGIN());
+//        if (ctx.expr() != null) {
+//            final DetailAstImpl embeddedExpression =
+//                    createImaginary(TokenTypes.EMBEDDED_EXPRESSION);
+//            embeddedExpression.addChild(visit(ctx.expr()));
+//            stringTemplate.addChild(embeddedExpression);
+//        }
+//
+//        if (ctx.stringTemplateMiddle() != null) {
+//            ctx.stringTemplateMiddle().forEach(child -> {
+//                final DetailAstImpl stringTemplateMiddle =
+//                        create(child.STRING_TEMPLATE_MID());
+//                final DetailAstImpl embeddedExpression =
+//                        createImaginary(TokenTypes.EMBEDDED_EXPRESSION);
+//                embeddedExpression.addChild(visit(child.expr()));
+//                stringTemplate.addChild(stringTemplateMiddle);
+//                stringTemplate.addChild(embeddedExpression);
+//            });
+//        }
+//
+//        stringTemplate.addChild(create(ctx.STRING_TEMPLATE_END()));
+//        return stringTemplate;
     }
 
     @Override

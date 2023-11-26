@@ -113,7 +113,8 @@ tokens {
     RECORD_PATTERN_DEF, RECORD_PATTERN_COMPONENTS,
 
     STRING_TEMPLATE_BEGIN, STRING_TEMPLATE_MID, STRING_TEMPLATE_END,
-    EMBEDDED_EXPRESSION
+    EMBEDDED_EXPRESSION, EMBEDDED_EXPRESSION_BEGIN, EMBEDDED_EXPRESSION_END,
+    STRING_TEMPLATE_CONTENT
 }
 
 @header {
@@ -252,9 +253,48 @@ CHAR_LITERAL:            '\'' (EscapeSequence | ~['\\\r\n]) '\'';
 fragment StringFragment: (EscapeSequence | ~["\\\r\n])*;
 
 STRING_LITERAL:          '"' StringFragment '"';
-STRING_TEMPLATE_BEGIN:   '"'  StringFragment '\\' '{';
-STRING_TEMPLATE_MID:     '}' StringFragment '\\' '{';
-STRING_TEMPLATE_END:     '}' StringFragment '"';
+STRING_TEMPLATE_BEGIN:
+    {
+//        // check if the next three tokens match the pattern '"' StringFragment '\\' '{'
+//        // if so, then we are in a string template
+//        int la1 = _input.LA(1);
+//        int la2 = _input.LA(2);
+//        int la3 = _input.LA(3);
+//        if (la1 == '"' && la2 != '"' && la3 == '\\' && _input.LA(4) == '{') {
+//            // push the string template mode
+//            pushMode(DEFAULT_MODE);
+//            // report the string template begin?
+//        }
+
+        _input.LA(1) == '"' && _input.LA(2) != '"' && _input.LA(3) == '\\' && _input.LA(4) == '{'
+
+    }? '"' -> pushMode(StringTemplate);
+
+STRING_TEMPLATE_MID:
+    {
+        // check if the next three tokens match the pattern '}' StringFragment '\\' '{'
+//        // if so, then we are in a string template
+//        int la1 = _input.LA(1);
+//        int la2 = _input.LA(2);
+//        int la3 = _input.LA(3);
+//        if (la1 == '}' && la2 != '}' && la3 == '\\' && _input.LA(4) == '{') {
+//            // push the string template mode
+//            pushMode(DEFAULT_MODE);
+//            // report the string template begin?
+//        }
+
+        _input.LA(1) == '}' && _input.LA(2) != '}' && _input.LA(3) == '\\' && _input.LA(4) == '{'
+
+    }? '}' -> pushMode(StringTemplate), type(EMBEDDED_EXPRESSION_END);
+
+STRING_TEMPLATE_END:
+    {
+           // check if the next three tokens match the pattern '}' StringFragment '"'
+        _input.LA(1) == '}' && _input.LA(2) != '}' && _input.LA(3) == '"'
+        // check that input la 2 is a string fragment
+
+
+    }? '}' -> pushMode(StringTemplate), type(EMBEDDED_EXPRESSION_END);
 
 TEXT_BLOCK_LITERAL_BEGIN: '"' '"' '"' -> pushMode(TextBlock);
 
@@ -411,6 +451,12 @@ fragment Letter
     // covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
     | [\uD800-\uDBFF] [\uDC00-\uDFFF]
     ;
+
+mode StringTemplate;
+    // make this *
+    STRING_TEMPLATE_CONTENT: (EscapeSequence | ~["\\\r\n])+;
+    EMBEDDED_EXPRESSION_BEGIN:   '\\' '{' -> popMode;
+    END:         '"' -> popMode, type(STRING_TEMPLATE_END);
 
 // Text block lexical mode
 mode TextBlock;

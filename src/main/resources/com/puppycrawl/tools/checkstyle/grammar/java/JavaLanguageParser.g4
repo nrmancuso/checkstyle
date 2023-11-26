@@ -769,11 +769,9 @@ template
     ;
 
 stringTemplate
-    : STRING_TEMPLATE_BEGIN expr? stringTemplateMiddle* STRING_TEMPLATE_END
-    ;
-
-stringTemplateMiddle
-    : STRING_TEMPLATE_MID expr?
+    : STRING_TEMPLATE_BEGIN STRING_TEMPLATE_CONTENT?
+        (EMBEDDED_EXPRESSION_BEGIN expr EMBEDDED_EXPRESSION_END STRING_TEMPLATE_CONTENT?)*
+        STRING_TEMPLATE_END
     ;
 
 classType
