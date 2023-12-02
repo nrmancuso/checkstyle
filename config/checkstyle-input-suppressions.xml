@@ -18,7 +18,6 @@
             files="[\\/]checks[\\/]metrics[\\/]classfanoutcomplexity[\\/]InputClassFanOutComplexityExcludedPackagesCommonPackage.java"/>
   <suppress id="noCheckstyleInInputs"
             files="[\\/]checks[\\/]metrics[\\/]classfanoutcomplexity[\\/]InputClassFanOutComplexityExcludedPackagesDirectPackages.java"/>
-  <!-- until https://github.com/checkstyle/checkstyle/issues/4845 -->
   <suppress id="noCheckstyleInInputs"
           files="[\\/]checks[\\/]imports[\\/]customimportorder[\\/]InputCustomImportOrderThirdPartyAndSpecial.java"/>
   <suppress id="noCheckstyleInInputs"
