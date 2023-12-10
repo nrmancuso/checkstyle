@@ -103,6 +103,12 @@ public final class JavaAstVisitor extends JavaLanguageParserBaseVisitor<DetailAs
     /** String representation of the right shift operator. */
     private static final String RIGHT_SHIFT = ">>";
 
+    private static final String QUOTE = "\"";
+
+    private static final String EMBEDDED_EXPRESSION_BEGIN = "\\{";
+
+    private static final String EMBEDDED_EXPRESSION_END = "}";
+
     /**
      * The tokens here are technically expressions, but should
      * not return an EXPR token as their root.
@@ -1534,6 +1540,14 @@ public final class JavaAstVisitor extends JavaLanguageParserBaseVisitor<DetailAs
     }
 
     @Override
+    public DetailAstImpl visitTemplateExp(JavaLanguageParser.TemplateExpContext ctx) {
+        final DetailAstImpl dot = create(ctx.DOT());
+        dot.addChild(visit(ctx.expr()));
+        dot.addChild(visit(ctx.templateArgument()));
+        return dot;
+    }
+
+    @Override
     public DetailAstImpl visitPostfix(JavaLanguageParser.PostfixContext ctx) {
         final DetailAstImpl postfix;
         if (ctx.postfix.getType() == JavaLanguageLexer.INC) {
@@ -1740,6 +1754,150 @@ public final class JavaAstVisitor extends JavaLanguageParserBaseVisitor<DetailAs
         ctx.arrayDeclarator().forEach(child -> dot.addChild(visit(child)));
         dot.addChild(create(ctx.LITERAL_CLASS()));
         return dot;
+    }
+
+    @Override
+    public DetailAstImpl visitTemplateArgument(JavaLanguageParser.TemplateArgumentContext ctx) {
+        final DetailAstImpl templateArgument;
+        if (ctx.template() != null) {
+            templateArgument = visit(ctx.template());
+        }
+        else {
+            templateArgument = flattenedTree(ctx);
+        }
+        return templateArgument;
+    }
+
+    @Override
+    public DetailAstImpl visitStringTemplate(JavaLanguageParser.StringTemplateContext ctx) {
+        final DetailAstImpl begin = buildStringTemplateBeginning(ctx);
+
+        final DetailAstImpl embeddedExp = createImaginary(TokenTypes.EMBEDDED_EXPRESSION);
+        embeddedExp.addChild(visit(ctx.expr()));
+        begin.addChild(embeddedExp);
+
+        ctx.stringTemplateMiddle().stream()
+                .map(this::buildStringTemplateMiddle)
+                .collect(Collectors.toList())
+                .forEach(begin::addChild);
+
+        final DetailAstImpl end = buildStringTemplateEnd(ctx);
+        begin.addChild(end);
+        return begin;
+    }
+
+    private static DetailAstImpl buildStringTemplateBeginning(
+            JavaLanguageParser.StringTemplateContext ctx) {
+
+        final TerminalNode beginContext = ctx.STRING_TEMPLATE_BEGIN();
+        final Token beginToken = beginContext.getSymbol();
+
+        final String stringTemplateBeginText = beginContext.getText();
+        final int childCount = ctx.getChildCount();
+        final int charPositionInLine = beginToken.getCharPositionInLine();
+        final int beginTokenLine = beginToken.getLine();
+
+        final DetailAstImpl begin = buildImaginaryWithDetails(
+                TokenTypes.STRING_TEMPLATE_BEGIN, QUOTE,
+                beginTokenLine, charPositionInLine
+        );
+
+        final int start = QUOTE.length();
+        final int end = stringTemplateBeginText.length() - EMBEDDED_EXPRESSION_BEGIN.length();
+        final String beginContextText = beginContext.getText().substring(start, end);
+
+        final DetailAstImpl beginContent = buildImaginaryWithDetails(
+                TokenTypes.STRING_TEMPLATE_CONTENT, beginContextText,
+                beginTokenLine, charPositionInLine + start
+        );
+        begin.addChild(beginContent);
+
+        final DetailAstImpl embeddedBegin = buildImaginaryWithDetails(
+                TokenTypes.EMBEDDED_EXPRESSION_BEGIN, EMBEDDED_EXPRESSION_BEGIN,
+                beginTokenLine, charPositionInLine + end
+        );
+        begin.addChild(embeddedBegin);
+        return begin;
+    }
+
+    private static DetailAstImpl buildImaginaryWithDetails(
+            int tokenType, String text, int lineNumber, int columnNumber) {
+        final DetailAstImpl imaginary = createImaginary(tokenType);
+        imaginary.setText(text);
+        imaginary.setLineNo(lineNumber);
+        imaginary.setColumnNo(columnNumber);
+        return imaginary;
+    }
+
+    private DetailAstImpl buildStringTemplateMiddle(
+            JavaLanguageParser.StringTemplateMiddleContext middleContext) {
+        final TerminalNode ctx = middleContext.STRING_TEMPLATE_MID();
+        final Token token = ctx.getSymbol();
+        final int charPositionInLine = token.getCharPositionInLine();
+        final int lineNumber = token.getLine();
+        final String text = ctx.getText();
+
+        final DetailAstImpl embeddedEnd = buildImaginaryWithDetails(
+                TokenTypes.EMBEDDED_EXPRESSION_END, EMBEDDED_EXPRESSION_END,
+                lineNumber, charPositionInLine
+        );
+
+        final int startIndex = EMBEDDED_EXPRESSION_END.length();
+        final int endIndex = token.getText().length() - EMBEDDED_EXPRESSION_BEGIN.length();
+        final String contentText = text.substring(startIndex, endIndex);
+
+        final DetailAstImpl content = buildImaginaryWithDetails(
+                TokenTypes.STRING_TEMPLATE_CONTENT, contentText,
+                lineNumber, charPositionInLine + EMBEDDED_EXPRESSION_END.length()
+        );
+        embeddedEnd.addNextSibling(content);
+
+        final DetailAstImpl embeddedBegin = buildImaginaryWithDetails(
+                TokenTypes.EMBEDDED_EXPRESSION_BEGIN, EMBEDDED_EXPRESSION_BEGIN,
+                lineNumber,
+                charPositionInLine + text.length() - EMBEDDED_EXPRESSION_BEGIN.length()
+        );
+        content.addNextSibling(embeddedBegin);
+
+        final DetailAstImpl embeddedExp = createImaginary(TokenTypes.EMBEDDED_EXPRESSION);
+        embeddedExp.addChild(visit(middleContext.expr()));
+        embeddedBegin.addNextSibling(embeddedExp);
+        return embeddedEnd;
+    }
+
+    private static DetailAstImpl buildStringTemplateEnd(
+            JavaLanguageParser.StringTemplateContext ctx) {
+
+        final TerminalNode endContext = ctx.STRING_TEMPLATE_END();
+        final Token endToken = endContext.getSymbol();
+
+        final String stringTemplateEndText = endContext.getText();
+        final int childCount = ctx.getChildCount();
+        final int charPositionInLine = endToken.getCharPositionInLine();
+        final int lineNumber = endToken.getLine();
+
+        final int startIndex = EMBEDDED_EXPRESSION_END.length();
+        final int endIndex = stringTemplateEndText.length() - QUOTE.length();
+        final String endContentContentText = stringTemplateEndText.substring(startIndex, endIndex);
+
+        final DetailAstImpl embeddedEnd = buildImaginaryWithDetails(
+                TokenTypes.EMBEDDED_EXPRESSION_END, EMBEDDED_EXPRESSION_END,
+                lineNumber, charPositionInLine
+        );
+
+        final DetailAstImpl endContent = buildImaginaryWithDetails(
+                TokenTypes.STRING_TEMPLATE_CONTENT, endContentContentText,
+                lineNumber, charPositionInLine + QUOTE.length()
+        );
+        embeddedEnd.addNextSibling(endContent);
+
+        final DetailAstImpl end = buildImaginaryWithDetails(
+                TokenTypes.STRING_TEMPLATE_END, QUOTE,
+                lineNumber,
+                charPositionInLine + stringTemplateEndText.length() - QUOTE.length()
+        );
+        endContent.addNextSibling(end);
+        return embeddedEnd;
     }
 
     @Override
