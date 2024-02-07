@@ -191,7 +191,8 @@ public abstract class AbstractXpathTestSupport extends AbstractCheckstyleModuleT
      *
      * @param moduleConfig module configuration.
      * @param fileToProcess input class file.
-     * @param expectedViolations expected violation messages.
+     * @param expectedViolations expected violation message. This method
+     *                           supports only one violation.
      * @param expectedXpathQueries expected generated xpath queries.
      * @throws Exception if an error occurs
      */
@@ -199,6 +200,14 @@ public abstract class AbstractXpathTestSupport extends AbstractCheckstyleModuleT
                                   File fileToProcess,
                                   String[] expectedViolations,
                                   List<String> expectedXpathQueries) throws Exception {
+
+        if (expectedViolations.length != 1) {
+            throw new IllegalArgumentException(
+                    "Expected violations should contain exactly one element."
+                            + " Multiple violations are not supported."
+            );
+        }
+
         final ViolationPosition position =
                 extractLineAndColumnNumber(expectedViolations);
         final List<String> generatedXpathQueries =
