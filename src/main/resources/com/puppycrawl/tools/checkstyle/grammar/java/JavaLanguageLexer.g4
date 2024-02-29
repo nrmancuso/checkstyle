@@ -321,8 +321,9 @@ DOUBLE_COLON:            '::';
 AT:                      '@';
 ELLIPSIS:                '...';
 
-STRING_TEMPLATE_MID:     {stringTemplateDepth > 0}?
-                         '}' StringFragment '\\' '{'
+STRING_TEMPLATE_END:     {stringTemplateDepth > 0}?
+                         '}' StringFragment '"'
+                         {stringTemplateDepth--;}
                          ;
 
 // Whitespace and comments
